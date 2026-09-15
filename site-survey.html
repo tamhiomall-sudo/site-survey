@@ -1,0 +1,1135 @@
+<!DOCTYPE html>
+<html lang="en-GB">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<meta name="robots" content="noindex, nofollow">
+<title>Site Survey · Adriaan Bosch</title>
+<style>
+/* =======================================================================
+   Site Survey
+
+   A designing-out-crime site survey that shows its own gaps.
+
+   Built for anyone who surveys a site: a Designing Out Crime Officer, a
+   security manager, a facilities lead, a consultant. It standardises what a
+   survey produces, raises its quality and makes it quicker. The method is the one the
+   Level 5 Diploma in Crime Prevention (Designing Out Crime) teaches: read the
+   site from the outside in, record what you saw, and answer each weakness with
+   a recommendation tied to a crime prevention principle, a Secured by Design
+   guide and a standard, with a timescale and an ARC justification. The
+   wording here is this tool's own.
+
+   The moving part is the gaps. A weakness nobody answered, a recommendation
+   that traces to nothing seen, a missing principle, standard, timescale or
+   justification: each shows as it happens, and the summary by timescale
+   builds itself.
+
+   What it refuses to do. It does not judge the site's risk or what is
+   acceptable; that is the surveyor's advice and the owner's decision. It names
+   a standard, never a product or a brand. And it does not treat a typed
+   citation as checked: only the pick list's citations were checked, and
+   anything typed is shown as the surveyor's own.
+   ======================================================================= */
+:root{
+  --bg:#16191d; --card:#1C1F23; --line:#2f333a; --field:#141619;
+  --text:#f0ece4; --dim:#9a948a; --accent:#C8A15A;
+  --good:#4ecb8d; --warn:#e6c05a; --bad:#e66a5a; --info:#7fb2d6;
+  --serif:Fraunces,Georgia,'Times New Roman',serif;
+  --sans:'Source Sans 3',-apple-system,'Segoe UI',Roboto,Helvetica,Arial,sans-serif;
+}
+*{box-sizing:border-box;}
+[hidden]{display:none!important;}
+html,body{height:100%;}
+body{margin:0;background:var(--bg);color:var(--text);font:15px/1.55 var(--sans);}
+button{font:inherit;color:inherit;cursor:pointer;}
+a{color:var(--accent);text-decoration:none;}
+
+.top{display:flex;flex-wrap:wrap;gap:10px;align-items:center;padding:14px 20px;
+  border-bottom:1px solid var(--line);}
+.top h1{font:400 22px var(--serif);margin:0 8px 0 0;white-space:nowrap;}
+.top input,.top select{background:var(--field);border:1px solid var(--line);border-radius:8px;
+  color:var(--text);font:13.5px var(--sans);padding:8px 10px;min-height:44px;}
+.top input:focus,.top select:focus{outline:none;border-color:var(--accent);}
+.top .grow{flex:1 1 220px;}
+.held{font-size:11.5px;color:var(--dim);flex:1 1 100%;}
+
+.btn{min-height:44px;background:rgba(255,255,255,.04);border:1px solid var(--line);
+  border-radius:9px;padding:9px 15px;font-size:13px;white-space:nowrap;
+  transition:border-color .22s ease,color .22s ease;}
+.btn:hover{border-color:var(--accent);color:var(--accent);}
+.btn.sm{min-height:0;padding:4px 9px;font-size:12px;border-radius:7px;}
+.btn.danger{color:var(--bad);border-color:rgba(230,106,90,.45);}
+a.btn{display:inline-flex;align-items:center;color:var(--text);text-decoration:none;}
+
+.body{display:grid;grid-template-columns:220px minmax(0,1fr) 340px;min-height:calc(100vh - 110px);}
+
+.nav{border-right:1px solid var(--line);padding:14px 10px;}
+.step{display:block;width:100%;text-align:left;background:none;border:1px solid transparent;
+  border-radius:10px;padding:10px 12px;margin-bottom:6px;transition:border-color .22s ease;}
+.step:hover{border-color:var(--line);}
+.step.on{border-color:var(--accent);background:rgba(200,161,90,.07);}
+.step .nm{display:block;font:400 17px var(--serif);}
+.step .ct{display:block;font-size:11.5px;color:var(--dim);margin-top:2px;}
+.lamp{display:inline-block;width:8px;height:8px;border-radius:50%;margin-right:8px;
+  background:var(--line);vertical-align:2px;}
+.lamp.ok{background:var(--good);} .lamp.gap{background:var(--warn);} .lamp.bad{background:var(--bad);}
+
+.work{padding:18px 26px 60px;max-width:920px;}
+.work h2{font:400 28px var(--serif);margin:0 0 4px;}
+.prompt{color:var(--dim);font-size:13.5px;margin:0 0 12px;max-width:72ch;}
+.sect{font-size:11px;text-transform:uppercase;letter-spacing:.11em;color:var(--accent);
+  font-weight:600;margin:24px 0 10px;}
+.fld{background:var(--field);border:1px solid var(--line);border-radius:8px;color:var(--text);
+  font:14px var(--sans);padding:8px 10px;width:100%;}
+.fld:focus{outline:none;border-color:var(--accent);}
+textarea.fld{resize:vertical;min-height:56px;line-height:1.45;}
+.newobs{display:flex;gap:8px;align-items:center;}
+.newobs .fld{flex:1;}
+.newobs select.fld{flex:0 0 auto;width:auto;}
+.obsrow{display:flex;gap:8px;align-items:center;padding:6px 0;border-bottom:1px solid rgba(47,51,58,.5);}
+.obsrow .fld{flex:1;}
+.tg{background:none;border:1px solid var(--line);border-radius:999px;padding:4px 10px;
+  font-size:12px;color:var(--dim);transition:border-color .2s ease,color .2s ease;}
+.tg:hover{border-color:var(--accent);}
+.tg.weak{border-color:rgba(230,106,90,.55);color:var(--bad);min-width:84px;}
+.tg.strong{border-color:rgba(78,203,141,.5);color:var(--good);min-width:84px;}
+.tg.on{border-color:var(--accent);color:var(--accent);background:rgba(200,161,90,.08);}
+.chk{display:inline-flex;align-items:center;gap:6px;font-size:12.5px;color:var(--dim);margin-right:12px;}
+.recard{border:1px solid var(--line);border-radius:12px;padding:14px 16px;margin-bottom:12px;background:var(--card);}
+.row{display:flex;flex-wrap:wrap;gap:6px;align-items:center;margin-top:10px;}
+.row .lb{font-size:11px;text-transform:uppercase;letter-spacing:.09em;color:var(--dim);min-width:92px;}
+.pillx{display:inline-block;font-size:11px;border-radius:999px;padding:2px 8px;
+  border:1px solid var(--line);color:var(--dim);}
+.pillx.good{color:var(--good);border-color:rgba(78,203,141,.45);}
+.pillx.info{color:var(--info);border-color:rgba(127,178,214,.45);}
+.flash{outline:1px solid var(--accent);outline-offset:3px;border-radius:10px;}
+.empty{display:block;color:var(--dim);font-size:12.5px;margin:4px 0;}
+.note{color:var(--dim);font-size:11.5px;margin:10px 0 0;}
+.adds{display:flex;gap:8px;flex-wrap:wrap;}
+
+.side{border-left:1px solid var(--line);padding:16px 18px 40px;}
+.panel{border-bottom:1px solid var(--line);padding:4px 0 18px;margin-bottom:16px;}
+.panel:last-child{border-bottom:0;}
+.panel h3{font-size:11px;text-transform:uppercase;letter-spacing:.11em;color:var(--accent);
+  margin:0 0 10px;font-weight:600;}
+.big{font:600 34px var(--serif);line-height:1;}
+.say{color:var(--dim);font-size:12.5px;margin:4px 0 8px;}
+.gapi,.sumi{display:block;width:100%;text-align:left;background:none;border:0;
+  border-bottom:1px solid rgba(47,51,58,.5);padding:8px 0;color:var(--text);}
+.gapi .h{display:block;font-size:13px;}
+.gapi .d{display:block;font-size:11.5px;color:var(--dim);margin-top:2px;}
+.gapi .h::before{content:'';display:inline-block;width:7px;height:7px;border-radius:50%;
+  margin-right:7px;vertical-align:1px;background:var(--warn);}
+.gapi.fail .h::before{background:var(--bad);}
+.gapi .ly,.sumi .ly{display:block;color:var(--dim);font-size:10.5px;text-transform:uppercase;letter-spacing:.08em;}
+.sumi{font-size:12.5px;padding:6px 0;}
+.prin{display:flex;justify-content:space-between;gap:10px;font-size:12.5px;padding:3px 0;}
+.prin.zero{color:var(--dim);}
+.hz h4{font-size:13px;margin:12px 0 4px;font-weight:600;}
+.hz .n{color:var(--dim);font-weight:400;}
+
+.overlay{position:fixed;inset:0;background:rgba(10,12,14,.72);display:flex;align-items:flex-start;
+  justify-content:center;padding:6vh 16px;z-index:40;}
+.sheet{background:var(--bg);border:1px solid var(--line);border-radius:14px;max-width:780px;
+  width:100%;max-height:86vh;overflow:auto;padding:18px 20px;}
+.sheet h2{font:400 22px var(--serif);margin:0;}
+.pk{border-bottom:1px solid var(--line);padding:12px 0;display:flex;gap:14px;align-items:flex-start;}
+.pk .t{display:block;font-weight:600;}
+.pk .x{display:block;color:var(--dim);font-size:12.5px;margin-top:3px;}
+.pk .m{display:block;font-size:11.5px;color:var(--info);margin-top:4px;}
+
+.toast{position:fixed;left:50%;bottom:26px;transform:translateX(-50%);
+  background:var(--card);border:1px solid var(--line);border-radius:11px;
+  padding:11px 18px;font-size:13.5px;max-width:74ch;opacity:0;
+  pointer-events:none;transition:opacity .25s ease;z-index:50;}
+.toast.on{opacity:1;}
+.toast.good{border-color:rgba(78,203,141,.5);}
+.toast.bad{border-color:rgba(230,106,90,.5);}
+
+@media (max-width:1150px){ .body{grid-template-columns:190px minmax(0,1fr);}
+  .side{grid-column:1 / -1;border-left:0;border-top:1px solid var(--line);} }
+@media (max-width:720px){ .body{grid-template-columns:1fr;}
+  .nav{border-right:0;border-bottom:1px solid var(--line);display:flex;overflow-x:auto;gap:6px;}
+  .step{min-width:150px;margin:0;} .nav .note{display:none;} .work{padding:16px;} }
+@media (prefers-reduced-motion:reduce){ *{transition:none!important;animation:none!important;} }
+</style>
+</head>
+<body>
+
+<div class="top">
+  <h1>Site Survey</h1>
+  <input id="iName" class="grow" placeholder="Site name or address" aria-label="Site name or address">
+  <select id="iType" aria-label="Property type">
+    <option value="">Residential or not</option>
+    <option value="residential">Residential</option>
+    <option value="non-residential">Non-residential</option>
+  </select>
+  <input id="iDate" type="date" aria-label="Date of survey">
+  <input id="iOfficer" placeholder="Surveyed by" aria-label="Surveyed by">
+  <button class="btn" id="bNew">New</button>
+  <button class="btn" id="bOpen">Open</button>
+  <button class="btn" id="bSave">Save a copy</button>
+  <button class="btn" id="bReport">Export report</button>
+  <a class="btn" href="https://adriaanbosch.net/#tools" target="_blank" rel="noopener" title="Other tools for security work, on adriaanbosch.net">More tools</a>
+  <div class="held">Saved in this browser as you type. Save a copy is the backup, and the file is the record.</div>
+</div>
+
+<div class="body">
+  <div class="nav" id="nav"></div>
+  <div class="work" id="work"></div>
+  <div class="side" id="side"></div>
+</div>
+
+<div class="overlay" id="pick" hidden>
+  <div class="sheet" role="dialog" aria-labelledby="pickTitle">
+    <div style="display:flex;justify-content:space-between;align-items:baseline;gap:12px">
+      <h2 id="pickTitle">Common measures</h2>
+      <button class="btn sm" data-closepick>Close</button>
+    </div>
+    <p class="prompt" style="margin-top:8px">Each one carries its principles, the standard to cite and a usual
+      timescale. Add it, link it to the weakness it answers, then say what is specific to this site.
+      The citations were checked as current on 15 September 2026.</p>
+    <div id="pickBody"></div>
+  </div>
+</div>
+
+<input type="file" id="file" accept="application/json,.json" hidden>
+<div class="toast" id="toast"></div>
+
+<script>
+/* =======================================================================
+   Site Survey
+   ======================================================================= */
+
+const KEY = 'site-survey-v1';
+const $ = id => document.getElementById(id);
+const uid = p => p + Math.random().toString(36).slice(2, 9);
+const str = v => typeof v === 'string' ? v : '';
+const esc = s => String(s == null ? '' : s).replace(/[&<>"']/g,
+  c => ({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c]));
+const short = (t, n) => { n = n || 60; t = String(t || ''); return t.length > n ? t.slice(0, n - 3) + '...' : t; };
+
+/* The site read from the outside in. The last field says whether a layer takes
+   recommendations: the surroundings are context, recorded for what they do to
+   the site, and nobody recommends moving a railway station. */
+const LAYERS = [
+  ['surroundings', 'Surroundings', 'What around the site creates or reduces the opportunity for crime: crime generators, routes past, overlooking, activity at different times.', false],
+  ['perimeter', 'Perimeter', 'The boundary of the site: fences, walls, hedges, gates, and every way through them.', true],
+  ['void', 'Void', 'The space between the boundary and the building: parking, landscaping, bin stores, cover and anything that could be climbed.', true],
+  ['shell', 'Shell', 'The building envelope: doors, windows, roof lights, and every other way in.', true],
+  ['internal', 'Internal', 'Inside the building: access control, intruder alarm, safes, and how the space is used.', true]
+];
+const layerOf = k => LAYERS.find(l => l[0] === k);
+
+/* The ten principles, in this tool's words. Every recommendation traces to at
+   least one, which is what keeps the advice grounded rather than a list. */
+const PRINCIPLES = [
+  [1, 'Target hardening', 'Make the target harder to attack: stronger doors, windows, locks and fences.'],
+  [2, 'Target removal', 'Take the attractive item or person out of reach, or out of sight.'],
+  [3, 'Remove the means', 'Keep away what could be used to commit the offence: ladders, tools, bins to climb on.'],
+  [4, 'Reduce the payoff', 'Make what could be taken worth less: marking, time locks, nothing left on show.'],
+  [5, 'Access control', 'Limit who can get into the site, the building, or part of it.'],
+  [6, 'Surveillance', 'Raise the chance of being seen: sightlines, lighting, people, CCTV.'],
+  [7, 'Environmental design', 'Change the layout or the setting so the opportunity is designed out.'],
+  [8, 'Rule setting', 'Make clear what is expected, and where: signs, house rules, reporting to reception.'],
+  [9, 'Increase the chance of being caught', 'Combine measures so an offender is slowed, seen and heard.'],
+  [10, 'Deflect offenders', 'Steer behaviour away from the site, often with partners.']
+];
+
+/* Current Secured by Design guides, checked on the SBD design guides page on
+   15 September 2026. Homes 2023 and 2024 and Commercial 2023 are withdrawn. */
+const GUIDES = {
+  res:    'SBD Residential Guide 2025',
+  nonres: 'SBD Non-Residential Guide 2025',
+  light:  'SBD Lighting Against Crime Guidance 2026'
+};
+const HORIZONS = [['short', 'Short term'], ['medium', 'Medium term'], ['long', 'Long term']];
+const ARC = [['a', 'Appropriate'], ['r', 'Realistic'], ['c', 'Cost-effective']];
+
+/* The pick lists. The perimeter came first, at checkpoint 1, to judge whether
+   picking beats typing; the void, shell and internal layers followed at
+   checkpoint 3, on the same rule. The surroundings take no recommendations.
+
+   Each standard was checked as the current edition on 15 September 2026:
+   LPS 1175 Issue 8 (fences and gates; still current after NPSA left fencing
+   testing in January 2026), BS 1722-10:2019, BS 5489-1:2020,
+   BS EN IEC 62676-4:2025 and PAS 170-1:2017. An access control standard was
+   left out on purpose: BS EN 60839-11-1:2013 shows as withdrawn with no clear
+   replacement, and citing it would be the thing this tool refuses to do.
+   Measures with no standard say so rather than borrowing one. */
+const PICKS = {
+  perimeter: [
+    { id:'per-fence-rated', title:'Security-rated perimeter fence',
+      text:'Install a perimeter fence certified to LPS 1175 Issue 8, with the rating chosen for the tools and the delay the risk supports.',
+      principles:[1, 5], standard:'LPS 1175 Issue 8', horizon:'long' },
+    { id:'per-fence-mesh', title:'Anti-intruder mesh fence',
+      text:'Replace the boundary with an anti-intruder chain link or welded mesh fence.',
+      principles:[1, 5], standard:'BS 1722-10:2019', horizon:'long' },
+    { id:'per-gates', title:'Gates that match the fence',
+      text:'Fit gates to the same height and rating as the fence either side, lockable, with no gap under or beside them that defeats the fence.',
+      principles:[1, 5], standard:'LPS 1175 Issue 8', horizon:'medium' },
+    { id:'per-climbing', title:'Remove climbing aids near the boundary',
+      text:'Move or secure anything that could be used to climb the boundary: bins, stored materials, low walls and structures within reach.',
+      principles:[3, 1], standard:'', horizon:'short' },
+    { id:'per-planting', title:'Defensive planting along the boundary',
+      text:'Plant thorny, low-maintenance shrubs along the inside of the boundary, kept low where the boundary needs to stay overlooked.',
+      principles:[1, 7], standard:'', horizon:'medium' },
+    { id:'per-cutback', title:'Cut back vegetation at the boundary',
+      text:'Cut back trees and shrubs that hide the boundary or give cover to anyone climbing it, and set a maintenance schedule so it stays that way.',
+      principles:[6, 7], standard:'', horizon:'short' },
+    { id:'per-lighting', title:'Light the boundary and approach routes',
+      text:'Light the boundary, gates and approach routes so that people can be seen and recognised.',
+      principles:[6, 9], standard:'BS 5489-1:2020', horizon:'medium', guide:'light' },
+    { id:'per-cctv', title:'CCTV over the perimeter entry points',
+      text:'Cover the perimeter entry points with CCTV, stating what each view must show before any camera is chosen.',
+      principles:[6, 9], standard:'BS EN IEC 62676-4:2025', horizon:'medium' },
+    { id:'per-bollards', title:'Low-speed vehicle protection at the frontage',
+      text:'Install bollards where a vehicle could be driven into the frontage or through the gate line at low speed.',
+      principles:[1], standard:'PAS 170-1:2017', horizon:'long' },
+    { id:'per-define', title:'Define the boundary and its rules',
+      text:'Make clear where public space ends, with a boundary treatment and signs saying who may enter.',
+      principles:[7, 8], standard:'', horizon:'short' }
+  ],
+
+  /* Void, shell and internal, checked on 15 September 2026 as the current
+     editions: PAS 24:2022+A1:2024, BS EN 1627:2021, BS EN 356:2000 (still the
+     live edition), BS 3621:2017, DHF TS 008:2022, BS EN 1143-1:2019,
+     PD 6662:2017 with BS EN 50131-1, and BS 8243:2021 for confirmed alarms.
+     The Park Mark Safer Parking Award is a police crime prevention scheme run
+     by the British Parking Association, cited by name.
+
+     The NPCC police response policy is revised every year, so it is cited as
+     the latest annual edition rather than by a year that goes stale.
+
+     Left out on purpose: STS 202, whose current issue could not be confirmed,
+     and which LPS 1175 already covers for commercial doors; and any access
+     control standard, for the reason given above. The lock entry says it
+     applies only where it does not affect a means of escape, because security
+     does not override fire safety. */
+  void: [
+    { id:'void-lighting', title:'Light the car park, paths and approaches',
+      text:'Light the car park, paths and the approaches to the building so that people can be seen and recognised, with no dark areas against the building.',
+      principles:[6, 9], standard:'BS 5489-1:2020', horizon:'medium', guide:'light' },
+    { id:'void-cctv', title:'CCTV over the car park and approaches',
+      text:'Cover the car park and the approaches to the building with CCTV, stating what each view must show before any camera is chosen.',
+      principles:[6, 9], standard:'BS EN IEC 62676-4:2025', horizon:'medium' },
+    { id:'void-recess', title:'Remove hiding places against the building',
+      text:'Remove, fill or bring into view the recesses and alcoves close to the building where someone could wait or work unseen.',
+      principles:[6, 7], standard:'', horizon:'medium' },
+    { id:'void-planting', title:'Keep planting low near the building',
+      text:'Keep planting next to the building and along paths low and trimmed, so it gives no cover and does not block sightlines.',
+      principles:[6, 7], standard:'', horizon:'short' },
+    { id:'void-bins', title:'Secure bins and bin stores',
+      text:'Keep bins in a locked store or secured away from the building, so they cannot be climbed on or set alight against it.',
+      principles:[3, 1], standard:'', horizon:'short' },
+    { id:'void-parking', title:'Car park to the Park Mark scheme',
+      text:'Bring the car park up to the Park Mark Safer Parking Award: clear layout, lighting, surveillance and active management, assessed by the police.',
+      principles:[6, 7, 8], standard:'Park Mark Safer Parking Award', horizon:'long' },
+    { id:'void-cycles', title:'Cycle parking in view',
+      text:'Put cycle parking where it is overlooked from the building, with stands that let the frame and both wheels be locked.',
+      principles:[1, 6], standard:'', horizon:'medium' },
+    { id:'void-signs', title:'Signs for private land and CCTV',
+      text:'Put up signs saying the site is private and who may enter, and that CCTV is in use where it is.',
+      principles:[8], standard:'', horizon:'short' }
+  ],
+  shell: [
+    { id:'shell-doorsets', title:'Doorsets certified to PAS 24',
+      text:'Replace the entrance doorsets with doorsets certified to PAS 24.',
+      principles:[1, 5], standard:'PAS 24:2022+A1:2024', horizon:'long' },
+    { id:'shell-windows', title:'Accessible windows certified to PAS 24',
+      text:'Replace ground floor windows and any others that can be reached with windows certified to PAS 24.',
+      principles:[1], standard:'PAS 24:2022+A1:2024', horizon:'long' },
+    { id:'shell-lps', title:'Commercial doors, shutters or grilles to LPS 1175',
+      text:'Fit doors, shutters or grilles certified to LPS 1175 Issue 8, with the rating chosen for the tools and the delay the risk supports.',
+      principles:[1, 5], standard:'LPS 1175 Issue 8', horizon:'long' },
+    { id:'shell-rc', title:'Burglar resistance class to BS EN 1627',
+      text:'Where a European rating is specified, use doorsets, windows or shutters classified to BS EN 1627, with the resistance class set by the risk.',
+      principles:[1], standard:'BS EN 1627:2021', horizon:'long' },
+    { id:'shell-glazing', title:'Glazing rated for manual attack',
+      text:'Fit laminated glazing rated for manual attack wherever glazing can be reached, with the class set by the risk.',
+      principles:[1, 2], standard:'BS EN 356:2000', horizon:'medium' },
+    { id:'shell-locks', title:'Thief-resistant locks, where escape allows',
+      text:'Fit thief-resistant locks to doors locked by key from both sides, only where that does not affect a means of escape.',
+      principles:[1], standard:'BS 3621:2017', horizon:'medium' },
+    { id:'shell-letterplate', title:'Letter plates that stop key fishing',
+      text:'Fit letter plates that stop keys and handles being reached through them, or take mail delivery away from the door.',
+      principles:[1, 3], standard:'DHF TS 008:2022', horizon:'short' },
+    { id:'shell-roof', title:'Secure the way onto the roof',
+      text:'Secure roof lights and roof hatches, and anything outside that would help someone climb onto the roof.',
+      principles:[1, 3], standard:'', horizon:'medium' }
+  ],
+  internal: [
+    { id:'int-alarm', title:'Intruder alarm to PD 6662',
+      text:'Install an intruder alarm designed and installed to PD 6662, with the grade set by the risk.',
+      principles:[9, 6], standard:'PD 6662:2017 with BS EN 50131-1', horizon:'medium' },
+    { id:'int-police', title:'Police response to the alarm',
+      text:'Where police response is wanted, have the alarm monitored to the police requirements, with confirmed activations, so that it can be given a unique reference number.',
+      principles:[9], standard:'NPCC Security Systems Policy, latest annual edition; BS 8243:2021', horizon:'medium' },
+    { id:'int-safe', title:'A safe graded for what it holds',
+      text:'Keep cash and high-value items in an anchored safe certified to BS EN 1143-1, graded for the value held.',
+      principles:[1, 2, 4], standard:'BS EN 1143-1:2019', horizon:'medium' },
+    { id:'int-cctv', title:'CCTV over entrances and high-value areas',
+      text:'Cover the entrance, reception and high-value areas inside with CCTV, stating what each view must show before any camera is chosen.',
+      principles:[6, 9], standard:'BS EN IEC 62676-4:2025', horizon:'medium' },
+    { id:'int-zones', title:'Keep visitors out of private areas',
+      text:'Divide the building so that visitors cannot reach offices, stores or plant rooms without being let through.',
+      principles:[5, 7], standard:'', horizon:'long' },
+    { id:'int-display', title:'Nothing valuable on show',
+      text:'Keep valuable items out of sight from outside, and clear displays at closing time.',
+      principles:[2, 4], standard:'', horizon:'short' },
+    { id:'int-marking', title:'Mark valuable property',
+      text:'Mark valuable property so that it can be traced and is harder to sell on.',
+      principles:[4], standard:'', horizon:'short' },
+    { id:'int-routine', title:'Locking-up routine and key control',
+      text:'Set out a locking-up routine and brief it, and record who holds keys and alarm codes.',
+      principles:[8, 5], standard:'', horizon:'short' }
+  ]
+};
+const pickById = id => { for (const k in PICKS){ const p = PICKS[k].find(x => x.id === id); if (p) return p; } return null; };
+
+/* ---- the survey --------------------------------------------------------- */
+let S = blank();
+function blank(){
+  const layers = {};
+  LAYERS.forEach(l => { layers[l[0]] = { obs:[], recs:[], none:false }; });
+  /* site.officer is whoever did the survey, not only a police officer. The
+     name is kept because renaming it would stop saved surveys opening. */
+  return { v:1, kind:'site-survey', site:{ name:'', type:'', date:'', officer:'' },
+           layers, at:'surroundings' };
+}
+function blankRec(guide){
+  return { id:uid('r'), text:'', answers:[], principles:[], guide:guide || '', guideOther:'',
+           standard:'', noStandard:false, horizon:'', arc:{ a:false, r:false, c:false }, why:'',
+           fromList:null, listStandard:'' };
+}
+const defaultGuide = () => S.site.type === 'residential' ? 'res'
+  : S.site.type === 'non-residential' ? 'nonres' : '';
+const guideName = r => r.guide === 'other' ? r.guideOther.trim() : (GUIDES[r.guide] || '');
+
+function allRecs(){
+  const out = [];
+  LAYERS.forEach(([k]) => S.layers[k].recs.forEach(r => out.push({ k, r })));
+  return out;
+}
+function findRec(id){
+  for (const [k] of LAYERS){ const r = S.layers[k].recs.find(x => x.id === id); if (r) return { k, r }; }
+  return null;
+}
+function findObs(id){
+  for (const [k] of LAYERS){ const o = S.layers[k].obs.find(x => x.id === id); if (o) return { k, o }; }
+  return null;
+}
+const hasWork = () => !!S.site.name || LAYERS.some(([k]) => S.layers[k].obs.length || S.layers[k].recs.length);
+
+/* Whether a citation came from the checked list. Worked out from the pick
+   list itself rather than trusted from the file, so a saved survey cannot
+   claim a check that never happened. */
+function stdState(r){
+  if (r.noStandard) return 'none';
+  if (!r.standard.trim()) return '';
+  return r.fromList && r.standard.trim() === r.listStandard ? 'list' : 'own';
+}
+function stdPill(r){
+  const s = stdState(r);
+  return s === 'none' ? '<span class="pillx">none applies</span>'
+    : s === 'list' ? '<span class="pillx good">from the checked list</span>'
+    : s === 'own'  ? '<span class="pillx info">your own, not checked</span>' : '';
+}
+
+/* ---- the gaps --------------------------------------------------------------
+   The quality readout. Each finding names the layer and the item so a click
+   goes straight to it. "fail" is something missing outright; "warn" is
+   something a reviewer would ask about. Nothing here judges whether the advice
+   is right: only whether the report is complete enough to stand up. */
+function gaps(){
+  const G = [];
+  const add = (tone, layer, head, detail, id) => G.push({ tone, layer, head, detail, id });
+
+  if (!S.site.name.trim()) add('warn', null, 'The site is not named', 'Name the site so the report says what it covers.');
+  if (!S.site.type) add('warn', null, 'Residential or non-residential is not set',
+    'It decides which Secured by Design guide a new recommendation points to.');
+
+  LAYERS.forEach(([k, label, , hasRecs]) => {
+    const L = S.layers[k];
+    if (!L.obs.length && !L.none)
+      add('fail', k, label + ' not surveyed',
+        'Nothing recorded. If there is genuinely nothing here, tick "Nothing to record" so the report says so.');
+    if (!hasRecs) return;
+
+    L.obs.filter(o => o.kind === 'weakness' && o.text.trim()).forEach(o => {
+      if (!L.recs.some(r => r.answers.includes(o.id)))
+        add('fail', k, '"' + short(o.text) + '" has no recommendation',
+          'A weakness recorded and not answered. Recommend something, or record why nothing is needed.', o.id);
+    });
+
+    L.recs.forEach((r, i) => {
+      const nm = r.text.trim() ? '"' + short(r.text) + '"' : 'Recommendation ' + (i + 1);
+      if (!r.text.trim()) add('fail', k, nm + ' has no wording', 'Say what should be done, and where.', r.id);
+      if (!r.answers.length) add('warn', k, nm + ' does not trace to anything seen',
+        'A recommendation that answers no observation reads as generic advice. Link it to the weakness it deals with.', r.id);
+      if (!r.principles.length) add('fail', k, nm + ' has no principle', 'Tag the crime prevention principle it applies.', r.id);
+      if (!guideName(r)) add('warn', k, nm + ' cites no guide', 'Point to the Secured by Design guide it follows.', r.id);
+      if (!r.standard.trim() && !r.noStandard) add('warn', k, nm + ' names no standard',
+        'Name the standard, or tick that no standard applies.', r.id);
+      if (!r.horizon) add('fail', k, nm + ' has no timescale', 'Short, medium or long term.', r.id);
+      if (!(r.arc.a && r.arc.r && r.arc.c) || !r.why.trim()) add('warn', k, nm + ' is not justified',
+        'Appropriate, realistic and cost-effective, each ticked, with a sentence on why for this site.', r.id);
+    });
+  });
+  return G.sort((a, b) => (a.tone === 'fail' ? 0 : 1) - (b.tone === 'fail' ? 0 : 1));
+}
+
+/* ---- holding work --------------------------------------------------------
+   Saves on every change. The browser store is a cache: per browser, per
+   device, and a private window forgets it. The saved file is the record. */
+function save(){
+  try { localStorage.setItem(KEY, JSON.stringify(S)); }
+  catch(e){ toast('Could not save in this browser. Save a copy now.', 'bad'); }
+}
+function load(){
+  try {
+    const raw = localStorage.getItem(KEY);
+    if (raw){ const res = readSurvey(JSON.parse(raw)); if (res.ok){ S = res.S; } }
+  } catch(e){ S = blank(); }
+}
+
+let toastT = null;
+function toast(text, tone){
+  const t = $('toast');
+  t.textContent = text; t.className = 'toast on ' + (tone || '');
+  clearTimeout(toastT);
+  toastT = setTimeout(() => { t.className = 'toast ' + (tone || ''); }, 4200);
+}
+
+/* ---- file in, file out ------------------------------------------------------
+   Reading a file reconciles before it commits: what was in the file, what was
+   read, and what was left out and why. A file from another tool is refused
+   and nothing changes. */
+function normRec(r){
+  const pick = typeof r.fromList === 'string' ? pickById(r.fromList) : null;
+  return {
+    id: typeof r.id === 'string' && r.id ? r.id : uid('r'),
+    text: str(r.text),
+    answers: Array.isArray(r.answers) ? r.answers.filter(x => typeof x === 'string') : [],
+    principles: Array.isArray(r.principles)
+      ? r.principles.map(Number).filter(n => n >= 1 && n <= 10).filter((n, i, a) => a.indexOf(n) === i) : [],
+    guide: ['res', 'nonres', 'light', 'other'].includes(r.guide) ? r.guide : '',
+    guideOther: str(r.guideOther),
+    standard: str(r.standard),
+    noStandard: !!r.noStandard,
+    horizon: ['short', 'medium', 'long'].includes(r.horizon) ? r.horizon : '',
+    arc: { a: !!(r.arc && r.arc.a), r: !!(r.arc && r.arc.r), c: !!(r.arc && r.arc.c) },
+    why: str(r.why),
+    fromList: pick ? pick.id : null,
+    listStandard: pick ? (pick.standard || '') : ''
+  };
+}
+
+function readSurvey(d){
+  /* Same wording as the rest of the estate: name what the file says it is,
+     name what this tool reads, and say the work is untouched. A file with no
+     kind at all is refused for its shape, never for its kind. */
+  if (d && typeof d === 'object' && typeof d.kind === 'string' && d.kind !== 'site-survey')
+    return { ok:false, said:'That file says it is "' + d.kind + '", and this tool reads site-survey files. Nothing has been changed.' };
+  if (!d || typeof d !== 'object' || !d.layers || typeof d.layers !== 'object')
+    return { ok:false, said:'That is not a file saved from Site Survey. Nothing has been changed.' };
+
+  const out = blank();
+  const site = d.site || {};
+  ['name', 'type', 'date', 'officer'].forEach(k => { out.site[k] = str(site[k]); });
+  if (!['', 'residential', 'non-residential'].includes(out.site.type)) out.site.type = '';
+
+  let obsIn = 0, obsRead = 0, recIn = 0, recRead = 0;
+  const left = [];
+  LAYERS.forEach(([k, label]) => {
+    const L = d.layers[k];
+    if (!L || typeof L !== 'object') return;
+    const obs = Array.isArray(L.obs) ? L.obs : [];
+    const recs = Array.isArray(L.recs) ? L.recs : [];
+    obsIn += obs.length; recIn += recs.length;
+    obs.forEach((o, i) => {
+      if (o && typeof o.text === 'string'){
+        out.layers[k].obs.push({ id: typeof o.id === 'string' && o.id ? o.id : uid('o'),
+          text: o.text, kind: o.kind === 'strength' ? 'strength' : 'weakness' });
+        obsRead++;
+      } else left.push(label + ', observation ' + (i + 1) + ': it has no text');
+    });
+    recs.forEach((r, i) => {
+      if (r && typeof r.text === 'string'){ out.layers[k].recs.push(normRec(r)); recRead++; }
+      else left.push(label + ', recommendation ' + (i + 1) + ': it has no text');
+    });
+    out.layers[k].none = !!L.none;
+  });
+  const unknown = Object.keys(d.layers).filter(k => !layerOf(k));
+  if (layerOf(d.at)) out.at = d.at;
+
+  let said = 'Opened' + (out.site.name ? ' "' + out.site.name + '"' : '') + '.\n\n' +
+    'In the file: ' + obsIn + ' observations and ' + recIn + ' recommendations.\n' +
+    'Read in: ' + obsRead + ' observations and ' + recRead + ' recommendations.';
+  if (left.length) said += '\n\nLeft out:\n' + left.join('\n');
+  if (unknown.length) said += '\n\nNot read, because this tool has no layer called: ' + unknown.join(', ') + '.';
+  return { ok:true, S:out, said, counts:{ obsIn, obsRead, recIn, recRead } };
+}
+
+const slug = s => (String(s || 'site').toLowerCase().replace(/[^a-z0-9]+/g, '-').replace(/^-|-$/g, '') || 'site');
+function download(name, text, mime){
+  const b = new Blob([text], { type: mime || 'text/plain' });
+  const u = URL.createObjectURL(b);
+  const a = document.createElement('a');
+  a.href = u; a.download = name; document.body.appendChild(a); a.click();
+  document.body.removeChild(a); setTimeout(() => URL.revokeObjectURL(u), 1500);
+}
+
+function openFile(f){
+  const rd = new FileReader();
+  rd.onload = () => {
+    let d = null;
+    try { d = JSON.parse(rd.result); } catch(e){ d = null; }
+    const res = readSurvey(d);
+    if (!res.ok){ alert(res.said); return; }
+    if (hasWork() && !confirm('This replaces the survey open now. Save a copy of it first if you need it.\n\nCarry on?')) return;
+    S = res.S; save(); fillTop(); render();
+    alert(res.said);
+  };
+  rd.readAsText(f);
+}
+
+/* ---- the report -------------------------------------------------------------
+   A real Word file, built here with no library, so the tool stays one file.
+   A .docx is a zip of a few XML parts; this writes the parts and zips them
+   uncompressed, the way the Incident Log writes its Excel template. It opens
+   in Word, Pages, Google Docs and LibreOffice.
+
+   The first version wrote HTML saved as .doc. Only Microsoft Word reads that:
+   on a Mac without Word it went to Pages and would not open, so it was
+   replaced before anyone relied on it.
+
+   The order follows the survey: the site, the surroundings, each layer's
+   observations and recommendations, then the advice by timescale. It closes
+   with what is still unsettled, listed rather than hidden, because a report
+   that looks finished when it is not is worse than one that says so. */
+
+const CRC = (() => { const t = []; for (let n = 0; n < 256; n++){ let c = n;
+  for (let k = 0; k < 8; k++) c = c & 1 ? 0xEDB88320 ^ (c >>> 1) : c >>> 1; t[n] = c >>> 0; } return t; })();
+function crc32(buf){ let c = 0xFFFFFFFF;
+  for (let i = 0; i < buf.length; i++) c = CRC[(c ^ buf[i]) & 0xFF] ^ (c >>> 8);
+  return (c ^ 0xFFFFFFFF) >>> 0; }
+function zip(files){
+  const enc = s => new TextEncoder().encode(s);
+  const u16 = n => [n & 0xFF, (n >> 8) & 0xFF];
+  const u32 = n => [n & 0xFF, (n >> 8) & 0xFF, (n >> 16) & 0xFF, (n >> 24) & 0xFF];
+  const chunks = [], central = []; let offset = 0;
+  for (const f of files){
+    const name = enc(f.name), data = f.data, crc = crc32(data);
+    const lh = new Uint8Array([].concat(u32(0x04034b50), u16(20), u16(0), u16(0), u16(0), u16(0),
+      u32(crc), u32(data.length), u32(data.length), u16(name.length), u16(0)));
+    chunks.push(lh, name, data);
+    central.push(new Uint8Array([].concat(u32(0x02014b50), u16(20), u16(20), u16(0), u16(0),
+      u16(0), u16(0), u32(crc), u32(data.length), u32(data.length), u16(name.length),
+      u16(0), u16(0), u16(0), u16(0), u32(0), u32(offset))), name);
+    offset += lh.length + name.length + data.length;
+  }
+  let clen = 0; central.forEach(c => clen += c.length);
+  const eocd = new Uint8Array([].concat(u32(0x06054b50), u16(0), u16(0), u16(files.length),
+    u16(files.length), u32(clen), u32(offset), u16(0)));
+  const out = new Uint8Array(offset + clen + eocd.length); let q = 0;
+  chunks.forEach(c => { out.set(c, q); q += c.length; });
+  central.forEach(c => { out.set(c, q); q += c.length; });
+  out.set(eocd, q);
+  return out;
+}
+
+/* XML text. Control characters are dropped as well as the markup escaped: one
+   pasted into a note is enough to stop Word opening the file at all. */
+const X = s => String(s == null ? '' : s)
+  .replace(/[\x00-\x08\x0B\x0C\x0E-\x1F]/g, '')
+  .replace(/&/g, '&amp;').replace(/</g, '&lt;').replace(/>/g, '&gt;').replace(/"/g, '&quot;');
+
+/* Word is strict about the order of elements inside a property block, so
+   these follow the schema order: bold, then colour, then size. */
+function wRun(t, o){
+  o = o || {};
+  const pr = (o.b ? '<w:b/>' : '') + (o.color ? '<w:color w:val="' + o.color + '"/>' : '') +
+             (o.sz ? '<w:sz w:val="' + o.sz + '"/>' : '');
+  return String(t == null ? '' : t).split('\n').map((line, i) =>
+    (i ? '<w:r><w:br/></w:r>' : '') + '<w:r>' + (pr ? '<w:rPr>' + pr + '</w:rPr>' : '') +
+    '<w:t xml:space="preserve">' + X(line) + '</w:t></w:r>').join('');
+}
+const wP = (inner, style) => '<w:p>' + (style ? '<w:pPr><w:pStyle w:val="' + style + '"/></w:pPr>' : '') + inner + '</w:p>';
+const wPara = (t, o) => wP(wRun(t, o));
+const wHead = (level, t) => wP(wRun(t), 'Heading' + level);
+const wBullet = (t, tail) => wP('<w:r><w:t xml:space="preserve">•</w:t></w:r><w:r><w:tab/></w:r>' +
+  wRun(t) + (tail ? wRun(' ' + tail, { color:'595959' }) : ''), 'SurveyBullet');
+
+/* A two-column table: a label on the left, the value on the right, with an
+   optional shaded title row across both. A4 at 2.2 cm margins leaves 9412
+   twips of text width. */
+const TBL_BORDERS = '<w:tblBorders>' + ['top', 'left', 'bottom', 'right', 'insideH', 'insideV']
+  .map(e => '<w:' + e + ' w:val="single" w:sz="4" w:space="0" w:color="BFBFBF"/>').join('') + '</w:tblBorders>';
+function wTable(title, rows){
+  const c1 = 2700, c2 = 6712;
+  const cell = (inner, width, span, fill) => '<w:tc><w:tcPr><w:tcW w:w="' + width + '" w:type="dxa"/>' +
+    (span ? '<w:gridSpan w:val="2"/>' : '') +
+    (fill ? '<w:shd w:val="clear" w:color="auto" w:fill="' + fill + '"/>' : '') + '</w:tcPr>' + inner + '</w:tc>';
+  let x = '<w:tbl><w:tblPr><w:tblW w:w="' + (c1 + c2) + '" w:type="dxa"/>' + TBL_BORDERS +
+    '<w:tblCellMar><w:top w:w="60" w:type="dxa"/><w:left w:w="100" w:type="dxa"/>' +
+    '<w:bottom w:w="60" w:type="dxa"/><w:right w:w="100" w:type="dxa"/></w:tblCellMar></w:tblPr>' +
+    '<w:tblGrid><w:gridCol w:w="' + c1 + '"/><w:gridCol w:w="' + c2 + '"/></w:tblGrid>';
+  if (title) x += '<w:tr>' + cell(wP(wRun(title, { b:true }), 'SurveyCell'), c1 + c2, true, 'F2F2F2') + '</w:tr>';
+  rows.forEach(([k, v, keyShaded]) => {
+    x += '<w:tr>' +
+      cell(wP(wRun(k, keyShaded ? { b:true } : { color:'595959' }), 'SurveyCell'), c1, false, keyShaded ? 'F2F2F2' : '') +
+      cell(wP(wRun(v), 'SurveyCell'), c2) + '</w:tr>';
+  });
+  /* A paragraph after every table, or two tables in a row fuse into one. */
+  return x + '</w:tbl>' + wP('', 'SurveyGap');
+}
+
+function reportDocumentXml(){
+  const G = gaps();
+  const recs = allRecs();
+  const P = n => PRINCIPLES[n - 1] ? n + ' ' + PRINCIPLES[n - 1][1] : String(n);
+  const hzName = h => (HORIZONS.find(x => x[0] === h) || ['', 'Not set'])[1];
+  const longDate = d => d.toLocaleDateString('en-GB', { day:'numeric', month:'long', year:'numeric' });
+  const surveyDate = () => {
+    if (!S.site.date) return 'Not recorded';
+    const x = new Date(S.site.date + 'T00:00:00');
+    return isNaN(x) ? S.site.date : longDate(x);
+  };
+
+  /* One running number across the report, so the summary can point back. */
+  const numbers = {}; let n = 0;
+  LAYERS.forEach(([k, , , hasRecs]) => { if (hasRecs) S.layers[k].recs.forEach(r => { numbers[r.id] = ++n; }); });
+
+  let b = wP(wRun('Site security survey'), 'Title') +
+    wP(wRun(S.site.name || 'Site not named'), 'Subtitle') +
+    wTable(null, [
+      ['Site', S.site.name || 'Not named', true],
+      ['Property type', S.site.type === 'residential' ? 'Residential' : S.site.type === 'non-residential' ? 'Non-residential' : 'Not set', true],
+      ['Date of survey', surveyDate(), true],
+      ['Surveyed by', S.site.officer || 'Not recorded', true]]);
+
+  LAYERS.forEach(([k, label, , hasRecs]) => {
+    const L = S.layers[k];
+    b += wHead(1, label);
+    if (!L.obs.length){
+      b += wPara(L.none ? 'Nothing to record in this layer.' : 'This layer was not surveyed.');
+    } else {
+      const list = (title, arr) => arr.length ? wHead(2, title) + arr.map(o => wBullet(o.text)).join('') : '';
+      const weak = L.obs.filter(o => o.kind === 'weakness'), strong = L.obs.filter(o => o.kind === 'strength');
+      b += hasRecs ? list('Weaknesses', weak) + list('Strengths', strong)
+                   : list('What harms the security of the site', weak) + list('What helps it', strong);
+    }
+    if (!hasRecs) return;
+    if (!L.recs.length){ if (L.obs.length) b += wPara('No recommendations for this layer.'); return; }
+
+    b += wHead(2, 'Recommendations');
+    L.recs.forEach(r => {
+      const answers = r.answers.map(id => L.obs.find(o => o.id === id)).filter(Boolean);
+      const unticked = ARC.filter(a => !r.arc[a[0]]).map(a => a[1].toLowerCase());
+      b += wTable(numbers[r.id] + '. ' + (r.text.trim() || 'No wording yet'), [
+        ['Answers', answers.length ? answers.map(o => o.text).join('\n') : 'Not linked to an observation'],
+        ['Principles', r.principles.length ? r.principles.map(P).join(', ') : 'None tagged'],
+        ['Guide', guideName(r) || 'None cited'],
+        ['Standard', r.noStandard ? 'No standard applies' : r.standard.trim() || 'None cited'],
+        ['Timescale', hzName(r.horizon)],
+        ['Why it is appropriate, realistic and cost-effective',
+          (r.why.trim() || 'Not yet justified') + (unticked.length ? ' (' + unticked.join(', ') + ' not confirmed)' : '')]
+      ]);
+    });
+  });
+
+  b += wHead(1, 'Summary of the advice');
+  HORIZONS.forEach(([hk, hl]) => {
+    const list = recs.filter(x => x.r.horizon === hk);
+    b += wHead(2, hl) + (list.length
+      ? list.map(x => wBullet(numbers[x.r.id] + '. ' + (x.r.text.trim() || 'No wording yet'), '(' + layerOf(x.k)[1] + ')')).join('')
+      : wPara('None.'));
+  });
+  const unset = recs.filter(x => !x.r.horizon);
+  if (unset.length) b += wPara('Without a timescale: recommendation ' + unset.map(x => numbers[x.r.id]).join(', ') + '.');
+
+  const used = PRINCIPLES.filter(p => recs.some(x => x.r.principles.includes(p[0])));
+  b += wHead(2, 'Crime prevention principles applied') +
+    wPara(used.length ? used.map(p => p[0] + ' ' + p[1]).join(', ') + '.' : 'None tagged.');
+
+  const own = recs.filter(x => stdState(x.r) === 'own');
+  if (own.length) b += wPara('Standards cited by the surveyor rather than taken from the checked list: recommendation ' +
+    own.map(x => numbers[x.r.id]).join(', ') + '.', { color:'595959' });
+
+  b += wHead(1, 'Not yet settled') + (G.length
+    ? wPara('This report was exported with ' + G.length + ' item' + (G.length === 1 ? '' : 's') + ' still open.') +
+      G.map(g => wBullet((g.layer ? layerOf(g.layer)[1] + ': ' : '') + g.head)).join('')
+    : wPara('Nothing was open when this report was exported. That says the report is complete, not that the advice is right.'));
+
+  b += wPara('Exported from Site Survey on ' + longDate(new Date()) + '.', { color:'7F7F7F', sz:18 });
+
+  return '<?xml version="1.0" encoding="UTF-8" standalone="yes"?>' +
+    '<w:document xmlns:w="http://schemas.openxmlformats.org/wordprocessingml/2006/main"><w:body>' + b +
+    '<w:sectPr><w:pgSz w:w="11906" w:h="16838"/>' +
+    '<w:pgMar w:top="1247" w:right="1247" w:bottom="1247" w:left="1247" w:header="708" w:footer="708" w:gutter="0"/>' +
+    '</w:sectPr></w:body></w:document>';
+}
+
+/* The fixed parts of the package. The addresses in them are namespace names
+   the format requires, not places anything is fetched from. */
+const XML_HEAD = '<?xml version="1.0" encoding="UTF-8" standalone="yes"?>';
+const CONTENT_TYPES = XML_HEAD +
+  '<Types xmlns="http://schemas.openxmlformats.org/package/2006/content-types">' +
+  '<Default Extension="rels" ContentType="application/vnd.openxmlformats-package.relationships+xml"/>' +
+  '<Default Extension="xml" ContentType="application/xml"/>' +
+  '<Override PartName="/word/document.xml" ContentType="application/vnd.openxmlformats-officedocument.wordprocessingml.document.main+xml"/>' +
+  '<Override PartName="/word/styles.xml" ContentType="application/vnd.openxmlformats-officedocument.wordprocessingml.styles+xml"/>' +
+  '</Types>';
+const ROOT_RELS = XML_HEAD +
+  '<Relationships xmlns="http://schemas.openxmlformats.org/package/2006/relationships">' +
+  '<Relationship Id="rId1" Type="http://schemas.openxmlformats.org/officeDocument/2006/relationships/officeDocument" Target="word/document.xml"/>' +
+  '</Relationships>';
+const DOC_RELS = XML_HEAD +
+  '<Relationships xmlns="http://schemas.openxmlformats.org/package/2006/relationships">' +
+  '<Relationship Id="rId1" Type="http://schemas.openxmlformats.org/officeDocument/2006/relationships/styles" Target="styles.xml"/>' +
+  '</Relationships>';
+
+/* Arial throughout, because it is on every machine that will open this. The
+   headings are real Word headings, so the navigation pane lists the layers. */
+const wStyle = (id, name, pPr, rPr) => '<w:style w:type="paragraph" w:styleId="' + id + '">' +
+  '<w:name w:val="' + name + '"/><w:basedOn w:val="Normal"/><w:next w:val="Normal"/><w:qFormat/>' +
+  (pPr ? '<w:pPr>' + pPr + '</w:pPr>' : '') + (rPr ? '<w:rPr>' + rPr + '</w:rPr>' : '') + '</w:style>';
+const STYLES = XML_HEAD +
+  '<w:styles xmlns:w="http://schemas.openxmlformats.org/wordprocessingml/2006/main">' +
+  '<w:docDefaults><w:rPrDefault><w:rPr><w:rFonts w:ascii="Arial" w:hAnsi="Arial" w:eastAsia="Arial" w:cs="Arial"/>' +
+  '<w:color w:val="1A1A1A"/><w:sz w:val="22"/><w:szCs w:val="22"/><w:lang w:val="en-GB"/></w:rPr></w:rPrDefault>' +
+  '<w:pPrDefault><w:pPr><w:spacing w:after="120" w:line="264" w:lineRule="auto"/></w:pPr></w:pPrDefault></w:docDefaults>' +
+  '<w:style w:type="paragraph" w:default="1" w:styleId="Normal"><w:name w:val="Normal"/><w:qFormat/></w:style>' +
+  wStyle('Title', 'Title', '<w:spacing w:after="60"/>', '<w:b/><w:sz w:val="40"/><w:szCs w:val="40"/>') +
+  wStyle('Subtitle', 'Subtitle', '<w:spacing w:after="240"/>', '<w:color w:val="595959"/><w:sz w:val="26"/><w:szCs w:val="26"/>') +
+  wStyle('Heading1', 'heading 1',
+    '<w:keepNext/><w:pBdr><w:bottom w:val="single" w:sz="6" w:space="2" w:color="BFBFBF"/></w:pBdr>' +
+    '<w:spacing w:before="360" w:after="120"/><w:outlineLvl w:val="0"/>',
+    '<w:b/><w:sz w:val="30"/><w:szCs w:val="30"/>') +
+  wStyle('Heading2', 'heading 2', '<w:keepNext/><w:spacing w:before="240" w:after="80"/><w:outlineLvl w:val="1"/>',
+    '<w:b/><w:sz w:val="24"/><w:szCs w:val="24"/>') +
+  wStyle('SurveyBullet', 'Survey bullet', '<w:spacing w:after="60"/><w:ind w:left="357" w:hanging="357"/>', '') +
+  wStyle('SurveyCell', 'Survey table text', '<w:spacing w:after="0"/>', '<w:sz w:val="20"/><w:szCs w:val="20"/>') +
+  wStyle('SurveyGap', 'Survey table gap', '<w:spacing w:after="0"/>', '<w:sz w:val="12"/><w:szCs w:val="12"/>') +
+  '</w:styles>';
+
+function reportDocx(){
+  const E = s => new TextEncoder().encode(s);
+  return zip([
+    { name:'[Content_Types].xml',          data:E(CONTENT_TYPES) },
+    { name:'_rels/.rels',                  data:E(ROOT_RELS) },
+    { name:'word/document.xml',            data:E(reportDocumentXml()) },
+    { name:'word/_rels/document.xml.rels', data:E(DOC_RELS) },
+    { name:'word/styles.xml',              data:E(STYLES) }
+  ]);
+}
+
+function exportReport(){
+  const G = gaps();
+  if (G.length && !confirm('There ' + (G.length === 1 ? 'is 1 thing' : 'are ' + G.length + ' things') + ' still to settle.\n\n' +
+      'Export anyway? The report will list them under Not yet settled, rather than look finished.')) return;
+  download(slug(S.site.name) + '-site-survey-report-' + new Date().toISOString().slice(0, 10) + '.docx',
+    reportDocx(), 'application/vnd.openxmlformats-officedocument.wordprocessingml.document');
+  toast('Report exported as a Word file. It can be edited before it goes out.', 'good');
+}
+
+/* ---- drawing ------------------------------------------------------------- */
+function fillTop(){
+  $('iName').value = S.site.name; $('iType').value = S.site.type;
+  $('iDate').value = S.site.date; $('iOfficer').value = S.site.officer;
+}
+
+function renderNav(){
+  const G = gaps();
+  $('nav').innerHTML = LAYERS.map(([k, label, , hasRecs]) => {
+    const L = S.layers[k];
+    const g = G.filter(x => x.layer === k);
+    const surveyed = L.obs.length || L.none;
+    const lamp = !surveyed ? '' : g.some(x => x.tone === 'fail') ? 'bad' : g.length ? 'gap' : 'ok';
+    const ct = L.none && !L.obs.length ? 'nothing to record'
+      : L.obs.length + ' seen' + (hasRecs ? ' · ' + L.recs.length + ' recommended' : '');
+    return '<button class="step' + (S.at === k ? ' on' : '') + '" data-layer="' + k + '">' +
+      '<span class="nm"><span class="lamp ' + lamp + '"></span>' + label + '</span>' +
+      '<span class="ct">' + ct + (g.length ? ' · ' + g.length + ' to settle' : '') + '</span></button>';
+  }).join('') +
+  '<p class="note" style="margin:14px 4px 0">Outside in: what is around the site, then its boundary, ' +
+  'the space inside it, the building, and inside the building.</p>';
+}
+
+function recCard(r, L){
+  const weak = L.obs.filter(o => o.kind === 'weakness');
+  const opt = (v, l, cur) => '<option value="' + v + '"' + (cur === v ? ' selected' : '') + '>' + esc(l) + '</option>';
+  return '<div class="recard" id="x-' + r.id + '">' +
+    '<textarea class="fld" rows="2" data-r="' + r.id + '" data-f="text" aria-label="Recommendation" ' +
+      'placeholder="What should be done, and where on this site">' + esc(r.text) + '</textarea>' +
+
+    '<div class="row"><span class="lb">Answers</span>' +
+      (weak.length ? weak.map(o => '<button class="tg' + (r.answers.includes(o.id) ? ' on' : '') + '" ' +
+        'data-act="answer" data-r="' + r.id + '" data-o="' + o.id + '">' + esc(short(o.text || '(no wording)', 42)) + '</button>').join('')
+        : '<span class="empty">No weaknesses recorded in this layer yet.</span>') + '</div>' +
+
+    '<div class="row"><span class="lb">Principles</span>' +
+      PRINCIPLES.map(p => '<button class="tg' + (r.principles.includes(p[0]) ? ' on' : '') + '" data-act="prin" ' +
+        'data-r="' + r.id + '" data-p="' + p[0] + '" title="' + esc(p[2]) + '">' + p[0] + ' ' + esc(p[1]) + '</button>').join('') + '</div>' +
+
+    '<div class="row"><span class="lb">Guide</span>' +
+      '<select class="fld" style="width:auto" data-r="' + r.id + '" data-c="guide" aria-label="Guide">' +
+        opt('', 'Choose a guide', r.guide) + opt('res', GUIDES.res, r.guide) + opt('nonres', GUIDES.nonres, r.guide) +
+        opt('light', GUIDES.light, r.guide) + opt('other', 'Another guide', r.guide) + '</select>' +
+      (r.guide === 'other' ? '<input class="fld" style="flex:1;min-width:200px" data-r="' + r.id + '" data-f="guideOther" ' +
+        'value="' + esc(r.guideOther) + '" placeholder="Which guide" aria-label="Which guide">' : '') + '</div>' +
+
+    '<div class="row"><span class="lb">Standard</span>' +
+      (r.noStandard ? '' : '<input class="fld" style="flex:1;min-width:200px" data-r="' + r.id + '" data-f="standard" ' +
+        'value="' + esc(r.standard) + '" placeholder="The standard to cite" aria-label="Standard">') +
+      '<label class="chk"><input type="checkbox" data-r="' + r.id + '" data-c="noStandard"' + (r.noStandard ? ' checked' : '') + '> No standard applies</label>' +
+      '<span id="pill-' + r.id + '">' + stdPill(r) + '</span></div>' +
+
+    '<div class="row"><span class="lb">Timescale</span>' +
+      HORIZONS.map(h => '<button class="tg' + (r.horizon === h[0] ? ' on' : '') + '" data-act="hz" data-r="' + r.id + '" ' +
+        'data-h="' + h[0] + '">' + h[1] + '</button>').join('') + '</div>' +
+
+    '<div class="row"><span class="lb">ARC</span>' +
+      ARC.map(a => '<label class="chk"><input type="checkbox" data-r="' + r.id + '" data-c="arc" data-a="' + a[0] + '"' +
+        (r.arc[a[0]] ? ' checked' : '') + '> ' + a[1] + '</label>').join('') +
+      '<input class="fld" style="flex:1 1 100%" data-r="' + r.id + '" data-f="why" value="' + esc(r.why) + '" ' +
+        'placeholder="Why it is appropriate, realistic and cost-effective for this site" aria-label="ARC justification"></div>' +
+
+    '<div class="row" style="justify-content:flex-end"><button class="btn sm danger" data-act="delRec" data-r="' + r.id + '">' +
+      'Remove recommendation</button></div></div>';
+}
+
+let lastKind = 'weakness';
+function renderLayer(){
+  const [k, label, prompt, hasRecs] = layerOf(S.at);
+  const L = S.layers[k];
+  const kindName = o => hasRecs ? (o === 'weakness' ? 'Weakness' : 'Strength') : (o === 'weakness' ? 'Harms' : 'Helps');
+
+  let h = '<h2>' + label + '</h2><p class="prompt">' + prompt + '</p>' +
+    '<label class="chk"><input type="checkbox" data-c="none"' + (L.none ? ' checked' : '') + '> Nothing to record in this layer</label>' +
+    '<div class="sect">What you saw</div>' +
+    '<div class="newobs">' +
+      '<select class="fld" id="newKind" aria-label="Kind of observation">' +
+        '<option value="weakness"' + (lastKind === 'weakness' ? ' selected' : '') + '>' + kindName('weakness') + '</option>' +
+        '<option value="strength"' + (lastKind === 'strength' ? ' selected' : '') + '>' + kindName('strength') + '</option></select>' +
+      '<input class="fld" id="newObs" autocomplete="off" aria-label="New observation" placeholder="' +
+        (hasRecs ? 'What you saw. Press Enter.' : 'What is around the site. Press Enter.') + '">' +
+      '<button class="btn" data-act="addObs">Add</button></div>';
+
+  h += L.obs.length ? L.obs.map(o =>
+    '<div class="obsrow" id="x-' + o.id + '">' +
+      '<button class="tg ' + (o.kind === 'weakness' ? 'weak' : 'strong') + '" data-act="obsKind" data-o="' + o.id + '" ' +
+        'title="Switch">' + kindName(o.kind) + '</button>' +
+      '<input class="fld" data-o="' + o.id + '" data-f="text" value="' + esc(o.text) + '" aria-label="Observation">' +
+      '<button class="btn sm" data-act="delObs" data-o="' + o.id + '" aria-label="Remove observation">×</button></div>').join('')
+    : '<p class="empty">Nothing recorded yet.</p>';
+
+  if (hasRecs){
+    h += '<div class="sect">What you recommend</div>' +
+      (L.recs.length ? L.recs.map(r => recCard(r, L)).join('') : '<p class="empty">No recommendations yet.</p>') +
+      '<div class="adds">' +
+        (PICKS[k] ? '<button class="btn" data-act="pick">Add from the list</button>' : '') +
+        '<button class="btn" data-act="addRec">Write one</button></div>' +
+      (PICKS[k] ? '' : '<p class="note">A pick list for this layer comes at a later checkpoint.</p>');
+  }
+  $('work').innerHTML = h;
+}
+
+function renderSide(){
+  const G = gaps();
+  const fails = G.filter(g => g.tone === 'fail').length;
+  const recs = allRecs();
+
+  let h = '<div class="panel"><h3>Before this goes out</h3>';
+  if (!G.length){
+    h += '<div class="big" style="color:var(--good)">0</div>' +
+      '<p class="say">Nothing missing. That says the report is complete, not that the advice is right.</p>';
+  } else {
+    h += '<div class="big" style="color:' + (fails ? 'var(--bad)' : 'var(--warn)') + '">' + G.length + '</div>' +
+      '<p class="say">' + (G.length === 1 ? 'thing' : 'things') + ' to settle' +
+        (fails ? ', ' + fails + ' missing outright' : '') + '</p>' +
+      G.map(g => '<button class="gapi ' + g.tone + '" data-go="' + (g.layer || '') + '" data-id="' + (g.id || '') + '">' +
+        (g.layer ? '<span class="ly">' + esc(layerOf(g.layer)[1]) + '</span>' : '') +
+        '<span class="h">' + esc(g.head) + '</span><span class="d">' + esc(g.detail) + '</span></button>').join('');
+  }
+  const own = recs.filter(x => stdState(x.r) === 'own').length;
+  if (own) h += '<p class="note">' + own + ' standard' + (own === 1 ? ' was' : 's were') +
+    ' typed rather than picked. The tool has not checked ' + (own === 1 ? 'it' : 'them') + '.</p>';
+  h += '</div>';
+
+  h += '<div class="panel"><h3>Principles used</h3>' +
+    PRINCIPLES.map(p => {
+      const n = recs.filter(x => x.r.principles.includes(p[0])).length;
+      return '<div class="prin' + (n ? '' : ' zero') + '"><span>' + p[0] + '. ' + esc(p[1]) + '</span>' +
+        '<span>' + (n || 'not used') + '</span></div>';
+    }).join('') +
+    '<p class="note">A report does not need all ten. One never used is a question to ask, not a fault.</p></div>';
+
+  const unset = recs.filter(x => !x.r.horizon).length;
+  h += '<div class="panel"><h3>The advice, by timescale</h3>' +
+    HORIZONS.map(([hk, hl]) => {
+      const list = recs.filter(x => x.r.horizon === hk);
+      return '<div class="hz"><h4>' + hl + ' <span class="n">' + list.length + '</span></h4>' +
+        (list.length ? list.map(x => '<button class="sumi" data-go="' + x.k + '" data-id="' + x.r.id + '">' +
+          '<span class="ly">' + esc(layerOf(x.k)[1]) + '</span>' +
+          esc(x.r.text.trim() ? short(x.r.text, 96) : '(no wording yet)') + '</button>').join('')
+          : '<p class="empty">None yet.</p>') + '</div>';
+    }).join('') +
+    (unset ? '<p class="note">' + unset + ' without a timescale yet.</p>' : '') + '</div>';
+
+  $('side').innerHTML = h;
+}
+
+function render(){ renderNav(); renderLayer(); renderSide(); }
+function refresh(){ save(); renderNav(); renderSide(); }
+
+function goTo(layer, id){
+  if (layer && layer !== S.at){ S.at = layer; save(); renderNav(); renderLayer(); }
+  if (id){
+    const el = $('x-' + id);
+    if (el){ el.scrollIntoView({ block:'center' }); el.classList.add('flash');
+             setTimeout(() => el.classList.remove('flash'), 1600); }
+  } else if (!layer){ $('iName').focus(); }
+}
+
+/* ---- acting on it ------------------------------------------------------------ */
+function addObs(){
+  const t = $('newObs').value.trim();
+  if (!t) return;
+  lastKind = $('newKind').value;
+  S.layers[S.at].obs.push({ id:uid('o'), text:t, kind:lastKind });
+  save(); render();
+  $('newObs').focus();
+}
+
+function addFromList(id){
+  const p = (PICKS[S.at] || []).find(x => x.id === id);
+  if (!p) return null;
+  const r = blankRec(p.guide || defaultGuide());
+  Object.assign(r, { text:p.text, principles:p.principles.slice(), standard:p.standard || '',
+    noStandard:!p.standard, horizon:p.horizon, fromList:p.id, listStandard:p.standard || '' });
+  S.layers[S.at].recs.push(r);
+  $('pick').hidden = true;
+  save(); render(); goTo(S.at, r.id);
+  toast('Added. Link it to the weakness it answers, and add what is specific to this site.', 'good');
+  return r;
+}
+
+function openPick(){
+  const list = PICKS[S.at] || [];
+  $('pickTitle').textContent = 'Common ' + layerOf(S.at)[1].toLowerCase() + ' measures';
+  $('pickBody').innerHTML = list.map(p =>
+    '<div class="pk"><div style="flex:1"><span class="t">' + esc(p.title) + '</span>' +
+      '<span class="x">' + esc(p.text) + '</span>' +
+      '<span class="m">' + p.principles.map(n => n + ' ' + PRINCIPLES[n - 1][1]).join(' · ') + ' · ' +
+        (p.standard ? esc(p.standard) : 'no standard') + ' · usually ' +
+        HORIZONS.find(h => h[0] === p.horizon)[1].toLowerCase() + '</span></div>' +
+      '<button class="btn sm" data-add="' + p.id + '">Add</button></div>').join('');
+  $('pick').hidden = false;
+}
+
+$('work').addEventListener('keydown', e => {
+  if (e.target.id === 'newObs' && e.key === 'Enter'){ e.preventDefault(); addObs(); }
+});
+
+$('work').addEventListener('input', e => {
+  const t = e.target, f = t.dataset.f;
+  if (!f) return;
+  if (t.dataset.o){ const x = findObs(t.dataset.o); if (x) x.o[f] = t.value; }
+  else if (t.dataset.r){
+    const x = findRec(t.dataset.r);
+    if (x){ x.r[f] = t.value;
+      if (f === 'standard'){ const p = $('pill-' + x.r.id); if (p) p.innerHTML = stdPill(x.r); } }
+  }
+  refresh();
+});
+
+$('work').addEventListener('change', e => {
+  const t = e.target, c = t.dataset.c;
+  if (!c) return;
+  if (c === 'none'){ S.layers[S.at].none = t.checked; refresh(); return; }
+  const x = findRec(t.dataset.r);
+  if (!x) return;
+  if (c === 'guide'){ x.r.guide = t.value; save(); render(); return; }
+  if (c === 'noStandard'){ x.r.noStandard = t.checked; save(); render(); return; }
+  if (c === 'arc'){ x.r.arc[t.dataset.a] = t.checked; refresh(); }
+});
+
+$('work').addEventListener('click', e => {
+  const b = e.target.closest('[data-act]');
+  if (!b) return;
+  const a = b.dataset.act, L = S.layers[S.at];
+  const x = b.dataset.r ? findRec(b.dataset.r) : null;
+
+  if (a === 'addObs') return addObs();
+  if (a === 'pick') return openPick();
+  if (a === 'obsKind'){ const o = L.obs.find(y => y.id === b.dataset.o);
+    if (o) o.kind = o.kind === 'weakness' ? 'strength' : 'weakness'; }
+  if (a === 'delObs'){
+    L.obs = L.obs.filter(y => y.id !== b.dataset.o);
+    L.recs.forEach(r => { r.answers = r.answers.filter(id => id !== b.dataset.o); });
+  }
+  if (a === 'addRec'){
+    const r = blankRec(defaultGuide()); L.recs.push(r);
+    save(); render();
+    const ta = document.querySelector('[data-r="' + r.id + '"][data-f="text"]'); if (ta) ta.focus();
+    return;
+  }
+  if (a === 'answer' && x){ const id = b.dataset.o;
+    x.r.answers = x.r.answers.includes(id) ? x.r.answers.filter(y => y !== id) : x.r.answers.concat(id); }
+  if (a === 'prin' && x){ const n = Number(b.dataset.p);
+    x.r.principles = x.r.principles.includes(n) ? x.r.principles.filter(y => y !== n) : x.r.principles.concat(n).sort((p, q) => p - q); }
+  if (a === 'hz' && x){ x.r.horizon = x.r.horizon === b.dataset.h ? '' : b.dataset.h; }
+  if (a === 'delRec' && x){
+    if (!confirm('Remove this recommendation?')) return;
+    L.recs = L.recs.filter(y => y.id !== x.r.id);
+  }
+  save(); render();
+});
+
+$('nav').addEventListener('click', e => {
+  const b = e.target.closest('[data-layer]');
+  if (!b) return;
+  S.at = b.dataset.layer; save(); render();
+  window.scrollTo({ top:0 });
+});
+
+$('side').addEventListener('click', e => {
+  const b = e.target.closest('[data-go]');
+  if (b) goTo(b.dataset.go || null, b.dataset.id || null);
+});
+
+$('pick').addEventListener('click', e => {
+  if (e.target.id === 'pick' || e.target.closest('[data-closepick]')){ $('pick').hidden = true; return; }
+  const b = e.target.closest('[data-add]');
+  if (b) addFromList(b.dataset.add);
+});
+document.addEventListener('keydown', e => { if (e.key === 'Escape') $('pick').hidden = true; });
+
+['iName', 'iDate', 'iOfficer'].forEach(id => $(id).addEventListener('input', () => {
+  S.site[{ iName:'name', iDate:'date', iOfficer:'officer' }[id]] = $(id).value; refresh();
+}));
+$('iType').addEventListener('change', () => { S.site.type = $('iType').value; refresh(); });
+
+$('bNew').onclick = () => {
+  if (hasWork() && !confirm('Start a new survey? This clears the one open now. Save a copy first if you need it.')) return;
+  S = blank(); save(); fillTop(); render();
+};
+$('bSave').onclick = () => {
+  download(slug(S.site.name) + '-survey-' + new Date().toISOString().slice(0, 10) + '.json',
+    JSON.stringify(S, null, 2), 'application/json');
+  toast('Saved a copy. That file is the backup, and Open brings it back.', 'good');
+};
+$('bOpen').onclick = () => $('file').click();
+$('bReport').onclick = exportReport;
+$('file').onchange = e => { const f = e.target.files[0]; e.target.value = ''; if (f) openFile(f); };
+
+/* ---- start ------------------------------------------------------------------ */
+load();
+fillTop();
+render();
+</script>
+</body>
+</html>
