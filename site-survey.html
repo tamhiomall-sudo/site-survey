@@ -58,6 +58,8 @@ a{color:var(--accent);text-decoration:none;}
   border-radius:9px;padding:9px 15px;font-size:13px;white-space:nowrap;
   transition:border-color .22s ease,color .22s ease;}
 .btn:hover{border-color:var(--accent);color:var(--accent);}
+.btn.primary{background:var(--accent);border-color:var(--accent);color:#20211c;font-weight:600;}
+.btn.primary:hover{color:#20211c;}
 .btn.sm{min-height:0;padding:4px 9px;font-size:12px;border-radius:7px;}
 .btn.danger{color:var(--bad);border-color:rgba(230,106,90,.45);}
 a.btn{display:inline-flex;align-items:center;color:var(--text);text-decoration:none;}
@@ -170,7 +172,7 @@ textarea.fld{resize:vertical;min-height:56px;line-height:1.45;}
   <button class="btn" id="bNew">New</button>
   <button class="btn" id="bOpen">Open</button>
   <button class="btn" id="bSave">Save a copy</button>
-  <button class="btn" id="bReport">Export report</button>
+  <button class="btn primary" id="bReport">Export report</button>
   <a class="btn" href="https://adriaanbosch.net/#tools" target="_blank" rel="noopener" title="Other tools for security work, on adriaanbosch.net">More tools</a>
   <div class="held">Saved in this browser as you type. Save a copy is the backup, and the file is the record.</div>
 </div>
